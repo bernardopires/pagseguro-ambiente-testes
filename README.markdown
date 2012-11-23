@@ -1,4 +1,4 @@
-Ambiente de Testes para o PagSeguro - pagseguro-ambiente-testes
+Ambiente de Testes PagSeguro - pagseguro-ambiente-testes
 ===============
 Este software tem o objetivo de auxiliar o desenvolvedor a testar sua implementação PagSeguro de forma prática. É possível enviar o seu carrinho de compras do PagSeguro e simular o sistema de notificações. Atualmente, o jeito atual recomendado pelo PagSeguro é que se crie um vendedor falso e que então que o desenvolvedor compre manualmente produtos, via boleto ou cartão de crédito, o que se torna imprático na maioria das vezes. Este método impede o desenvolvedor de usar sua máquina local para testar o sistema de notificações, pois obviamente não é possível enviar uma notificação para um endereço local como 127.0.0.1. Além disso não é possível simular uma venda bem sucedida (a não ser que você realmente compre o produto). Com este sistema você conseguirá simular todos os tipos de notificações do PagSeguro de forma rápida e prática.
 
@@ -15,7 +15,9 @@ Para iniciar o ambiente de testes é necessário que você primeiro envie os dad
 Fotos do Ambiente de Testes (Sandbox PagSeguro)
 ------------
 Página inicial: http://i.imgur.com/VFZ0E.png
+
 Carrinho enviado: http://i.imgur.com/NWFVO.png
+
 Notificação enviada: http://i.imgur.com/8V4yf.png
 
 Dúvida, problema ou sugestão? Quer contribuir?
