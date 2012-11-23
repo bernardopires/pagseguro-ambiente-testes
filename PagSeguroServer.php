@@ -2,8 +2,10 @@
 class PagSeguroServer
 {
 	/***** SETTINGS *****/
-    private $notification_url = 'subdomain1.test.com';
-    private $notification_port = '8000';
+    private $notification_domain = 'localhost';
+    private $notification_page = '/notifications/';
+    private $notification_port = '80';
+    
     private $order_filename = 'order.txt';
     private $notification_filename = 'notification.txt';
     private $transaction_filename = 'transaction.xml';
@@ -105,11 +107,12 @@ class PagSeguroServer
     }
     
     private function sendNotificationRequest() {
-		$fp = fsockopen($this->notification_url, $this->notification_port, $errno, $errstr, 30);
+		$fp = fsockopen($this->notification_domain, $this->notification_port, $errno, $errstr, 30);
 		$paramString = http_build_query($this->notification);
 		
-		$out = "POST ".$this->notification_url." HTTP/1.1\r\n";     
-		$out.= "Host: ".$_SERVER['HTTP_HOST']."\r\n";
+		$out = "POST ".$this->notification_page." HTTP/1.1\r\n";     
+		$out.= "Host: ".$this->notification_domain."\r\n";
+		$out.= "Connection: Close\r\n";
 		
 		$out.= "Content-Type: application/x-www-form-urlencoded\r\n";     
 		$out.= "Content-Length: ".strlen($paramString)."\r\n\r\n";
@@ -124,7 +127,7 @@ class PagSeguroServer
     }
     
     public function getNotificationUrl() {
-    	return $this->notification_url;
+    	return $this->notification_domain.$this->notification_page;
     }
     
     public function loadNotification() {
@@ -220,6 +223,7 @@ class PagSeguroServer
     public function wipe() {
     	unlink($this->order_filename);
     	unlink($this->notification_filename);
+    	unlink($this->transaction_filename);
     }
     
     public function getCurrentHost() {
