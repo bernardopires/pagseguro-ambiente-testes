@@ -106,6 +106,10 @@ class PagSeguroServer
 		$this->generateTransaction();
 		
 		$this->notification['response'] = $this->sendNotificationRequest();
+		
+		$file_handle = fopen($this->notification_filename, 'w') or die("can't open file");
+		fwrite($file_handle, serialize($this->notification));
+		fclose($file_handle);
     }
     
     private function sendNotificationRequest() {
