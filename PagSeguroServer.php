@@ -158,7 +158,7 @@ class PagSeguroServer
 
 		$xml->date = date("c");
 		$xml->code = $this->generateRandomString(self::TRANSACTION_CODE_LENGTH);
-		if ($this->order['ref_transacao']) $xml->referenece = $this->order['ref_transacao']; 
+		if ($this->order['ref_transacao']) $xml->reference = $this->order['ref_transacao']; 
 		$xml->type = $this->notification['notificationType']; 
 		$xml->status = $this->notification['transactionStatus']; 
 		if ($this->notification['transactionStatus'] == 7) $xml->cancellationSource = "INTERNAL";
