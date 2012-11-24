@@ -6,6 +6,7 @@ class PagSeguroServer
     private $notification_page = '/notifications/';
     private $notification_port = '80';
     
+    
     private $order_filename = 'order.txt';
     private $notification_filename = 'notification.txt';
     private $transaction_filename = 'transaction.xml';
@@ -98,12 +99,13 @@ class PagSeguroServer
     								 "transactionTextStatus" => $this->transaction_possible_status[$transactionStatus],
     								 );
     								 
-		$this->notification['response'] = $this->sendNotificationRequest();
         $file_handle = fopen($this->notification_filename, 'w') or die("can't open file");
 		fwrite($file_handle, serialize($this->notification));
 		fclose($file_handle);
 		
 		$this->generateTransaction();
+		
+		$this->notification['response'] = $this->sendNotificationRequest();
     }
     
     private function sendNotificationRequest() {
