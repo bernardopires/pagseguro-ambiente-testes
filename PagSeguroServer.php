@@ -45,6 +45,8 @@ class PagSeguroServer
         $file_handle = fopen($this->order_filename, 'w') or die("can't open file");
 		fwrite($file_handle, serialize($this->order));
 		fclose($file_handle);
+		
+		$this->generateTransaction();
     }
     
     public function isDataConsistent() {
@@ -103,7 +105,7 @@ class PagSeguroServer
 		fwrite($file_handle, serialize($this->notification));
 		fclose($file_handle);
 		
-		$this->generateTransaction();
+		$this->updateTransaction($this->notification);
 		
 		$this->notification['response'] = $this->sendNotificationRequest();
 		
@@ -125,9 +127,7 @@ class PagSeguroServer
 		$out.= $paramString;
 		fwrite($fp, $out);
 		$response = stream_get_contents($fp);
-		fclose($fp); 
-		
-		$this->generateTransaction();
+		fclose($fp);
 		
 		return $response;
     }
@@ -150,18 +150,15 @@ class PagSeguroServer
     
     /*********** TRANSACTION RELATED ***********/
     
-    private function generateTransaction() {    
+    private function generateTransaction() {
     	$this->loadState();
     	$items = $this->getOrderItems();
     	
     	$xml = new SimpleXMLElement("<transaction/>");
 
 		$xml->date = date("c");
-		$xml->code = $this->generateRandomString(self::TRANSACTION_CODE_LENGTH);
-		if ($this->order['ref_transacao']) $xml->reference = $this->order['ref_transacao']; 
-		$xml->type = $this->notification['notificationType']; 
-		$xml->status = $this->notification['transactionStatus']; 
-		if ($this->notification['transactionStatus'] == 7) $xml->cancellationSource = "INTERNAL";
+    	$xml->code = $this->generateRandomString(self::TRANSACTION_CODE_LENGTH);
+    	if ($this->order['ref_transacao']) $xml->reference = $this->order['ref_transacao']; 
 		$xml->lastEventDate = date("c");
 		$xml->paymentMethod->type = 1;
 		$xml->paymentMethod->code = 101;
@@ -214,7 +211,26 @@ class PagSeguroServer
 		fclose($file_handle);
     }
     
-    public function readTransaction() {
+    private function updateTransaction($notification) {
+    	$xml = simplexml_load_file($this->transaction_filename);    
+		$xml->type = $notification['notificationType']; 
+		$xml->status = $notification['transactionStatus']; 
+		if ($notification['transactionStatus'] == 7) $xml->cancellationSource = "INTERNAL";
+		
+        // write xml file with proper formatting
+        $dom = new DOMDocument('1.0');
+		$dom->preserveWhiteSpace = false;
+		$dom->formatOutput = true;
+		$dom->xmlStandalone = true;
+		$dom->encoding = "ISO-8859-1";
+		$dom->loadXML($xml->asXML());
+        
+        $file_handle = fopen($this->transaction_filename, 'w') or die("can't open file");
+		fwrite($file_handle, $dom->saveXML());
+		fclose($file_handle);
+    }
+    
+    public function readTransaction() {		
     	$file_handle = @fopen($this->transaction_filename, 'r');
 		$transaction = fread($file_handle, filesize($this->transaction_filename));
 		fclose($file_handle);
