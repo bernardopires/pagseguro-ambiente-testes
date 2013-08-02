@@ -2,7 +2,7 @@
 ini_set('display_errors','On');
 error_reporting(E_ALL);
 
-include 'PagSeguroServer.php';
+include '../PagSeguroServer.php';
 $server = new PagSeguroServer();
 
 if (!empty($_GET) || !empty($_POST)) {
