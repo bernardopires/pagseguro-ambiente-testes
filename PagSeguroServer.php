@@ -17,7 +17,7 @@ class PagSeguroServer
     const TRANSACTION_CODE_LENGTH = 36;
     private $order;
     private $notification;
-    private $required_data = array("tipo", "moeda", "email_cobranca", "item_id_1", "item_descr_1", "item_quant_1", "item_valor_1");
+    private $required_data = array("currency", "receiverEmail", "itemId", "itemDescription", "itemAmount", "itemQuantity");
     private $transaction_possible_status = array(
     	"1" => "Aguardando pagamento",
     	"2" => "Em análise",
@@ -57,10 +57,12 @@ class PagSeguroServer
     	if (!$this->order)
     		return array();
     		
-    	$missing_params = array();
+    	$missing_params = array();    	
+		$keys_order = implode(' ', array_keys($this->order)); 	
     	foreach ($this->required_data as $key) {
-    		if (!array_key_exists($key, $this->order)) 
+    		if (false === strpos($keys_order, $key)) { 
 				array_push($missing_params, $key);
+			}
 		}
 		
 		return implode(", ", $missing_params);
