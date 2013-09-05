@@ -2,7 +2,7 @@
 class PagSeguroServer
 {
 	/***** SETTINGS *****/
-    private $notification_domain = 'localhost:8000/';
+    private $notification_domain = 'localhost';
     private $notification_page = '/notifications/';
     private $notification_port = '80';
     
@@ -160,6 +160,7 @@ class PagSeguroServer
     	$xml->code = $this->generateRandomString(self::TRANSACTION_CODE_LENGTH);
     	
     	if (!empty($this->order['ref_transacao'])) $xml->reference = $this->order['ref_transacao']; 
+
 		$xml->lastEventDate = date("c");
 		$xml->paymentMethod->type = 1;
 		$xml->paymentMethod->code = 101;
