@@ -2,7 +2,7 @@
 class PagSeguroServer
 {
 	/***** SETTINGS *****/
-    private $notification_domain = 'localhost';
+    private $notification_domain = 'localhost:8000/';
     private $notification_page = '/notifications/';
     private $notification_port = '80';
     
@@ -158,7 +158,8 @@ class PagSeguroServer
 
 		$xml->date = date("c");
     	$xml->code = $this->generateRandomString(self::TRANSACTION_CODE_LENGTH);
-    	if ($this->order['ref_transacao']) $xml->reference = $this->order['ref_transacao']; 
+    	
+    	if (!empty($this->order['ref_transacao'])) $xml->reference = $this->order['ref_transacao']; 
 		$xml->lastEventDate = date("c");
 		$xml->paymentMethod->type = 1;
 		$xml->paymentMethod->code = 101;
@@ -181,20 +182,20 @@ class PagSeguroServer
 		}
 		
 		// sender
-		$xml->sender->name = $this->order['cliente_nome'] ?: "Mauro Turm";
-		$xml->sender->email = $this->order['cliente_email'] ?: "mauro@mail.com";
-		$xml->sender->phone->areaCode = $this->order['cliente_ddd'] ?: "31";
-		$xml->sender->phone->number = $this->order['cliente_tel'] ?: "55555555";
+		$xml->sender->name = !empty($this->order['cliente_nome']) ? $this->order['cliente_nome'] : "Mauro Turm";
+		$xml->sender->email = !empty($this->order['cliente_email']) ? $this->order['cliente_email'] : "mauro@mail.com";
+		$xml->sender->phone->areaCode = !empty($this->order['cliente_ddd']) ? $this->order['cliente_ddd'] : "31";
+		$xml->sender->phone->number = !empty($this->order['cliente_tel']) ? $this->order['cliente_tel'] : "55555555";
 		
 		// shipping
-		$xml->shipping->address->street = $this->order['cliente_end'] ?: "Av. do Contorno";
-		$xml->shipping->address->number = $this->order['cliente_num'] ?: "500";
-		$xml->shipping->address->complement = $this->order['cliente_compl'] ?: "2o Andar";
-		$xml->shipping->address->district = $this->order['cliente_bairro'] ?: "Funcionários";
-		$xml->shipping->address->postalCode = $this->order['cliente_cep'] ?: "30110039";
-		$xml->shipping->address->city = $this->order['cliente_cidade'] ?: "Belo Horizonte";
-		$xml->shipping->address->state = $this->order['cliente_uf'] ?: "MG";
-		$xml->shipping->address->country = $this->order['cliente_pais'] ?: "BRA";
+		$xml->shipping->address->street = !empty($this->order['cliente_end']) ? $this->order['cliente_end'] : "Av. do Contorno";
+		$xml->shipping->address->number = !empty($this->order['cliente_num']) ? $this->order['cliente_num'] : "500";
+		$xml->shipping->address->complement = !empty($this->order['cliente_compl']) ? $this->order['cliente_compl'] : "2o Andar";
+		$xml->shipping->address->district = !empty($this->order['cliente_bairro']) ? $this->order['cliente_bairro'] : "Funcionários";
+		$xml->shipping->address->postalCode = !empty($this->order['cliente_cep']) ? $this->order['cliente_cep'] : "30110039";
+		$xml->shipping->address->city = !empty($this->order['cliente_cidade']) ? $this->order['cliente_cidade'] : "Belo Horizonte";
+		$xml->shipping->address->state = !empty($this->order['cliente_uf']) ? $this->order['cliente_uf'] : "MG";
+		$xml->shipping->address->country = !empty($this->order['cliente_pais']) ? $this->order['cliente_pais'] : "BRA";
 		$xml->shipping->type = 3;
 		$xml->shipping->cost = "0.00";
 		
