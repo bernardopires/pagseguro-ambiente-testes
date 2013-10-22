@@ -2,7 +2,7 @@
 class PagSeguroServer
 {
 	/***** SETTINGS *****/
-    private $notification_domain = 'localhost';
+    private $notification_domain = 'localhost:8000';
     private $notification_page = '/notifications/';
     private $notification_port = '80';
     
@@ -17,7 +17,7 @@ class PagSeguroServer
     const TRANSACTION_CODE_LENGTH = 36;
     private $order;
     private $notification;
-    private $required_data = array("token", "tipo", "currency", "email", "itemId1", "itemDescription1", "itemQuantity1", "itemAmount1");
+    private $required_data = array("token", "currency", "email", "itemId1", "itemDescription1", "itemQuantity1", "itemAmount1","redirectURL");
 
     private $transaction_possible_status = array(
     	"1" => "Aguardando pagamento",
@@ -43,6 +43,7 @@ class PagSeguroServer
     
     public function saveState($order) {
     	$this->order = $order;
+    	var_dump($this->order_filename);
         $file_handle = fopen($this->order_filename, 'w') or die("can't open file");
 		fwrite($file_handle, serialize($this->order));
 		fclose($file_handle);
@@ -159,8 +160,8 @@ class PagSeguroServer
 
 		$xml->date = date("c");
     	$xml->code = $this->generateRandomString(self::TRANSACTION_CODE_LENGTH);
-    	if (isset($this->order['ref_transacao'])) 
-    		$xml->reference = $this->order['ref_transacao']; 
+    	if (isset($this->order['reference'])) 
+    		$xml->reference = $this->order['reference']; 
 
     	var_dump($this->order);
 		
