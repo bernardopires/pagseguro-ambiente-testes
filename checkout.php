@@ -4,7 +4,18 @@ error_reporting(E_ALL);
 
 include 'PagSeguroServer.php';
 $server = new PagSeguroServer();
-$server->wipe();
+
+if (!empty($_GET) || !empty($_POST)) {
+	if (empty($_GET))
+		$data = $_POST;
+	else
+		$data = $_GET;
+
+	$server->saveState($data);
+}
+else {
+	die("Nenhum dado recebido.");
+}
 
 // redirect to index
 $host = $server->getCurrentHost();
