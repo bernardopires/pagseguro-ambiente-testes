@@ -2,7 +2,7 @@
 class PagSeguroServer
 {
 	/***** SETTINGS *****/
-    private $notification_domain = 'localhost:8000';
+    private $notification_domain = 'localhost';
     private $notification_page = '/notifications/';
     private $notification_port = '80';
     
@@ -43,7 +43,6 @@ class PagSeguroServer
     
     public function saveState($order) {
     	$this->order = $order;
-    	var_dump($this->order_filename);
         $file_handle = fopen($this->order_filename, 'w') or die("can't open file");
 		fwrite($file_handle, serialize($this->order));
 		fclose($file_handle);
