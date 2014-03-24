@@ -1,0 +1,112 @@
+body, html {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	font-family: Arial, sans-serif;
+}
+
+#wrap {min-height: 100%;}
+
+#main {
+	overflow:auto;
+	padding-bottom: 40px;/* must be same height as the footer */
+}  
+
+#footer {
+	position: relative;
+	margin-top: -40px; /* negative value of footer height */
+	height: 30px;
+	clear:both;
+	
+	background-color: #3E4D3D;
+	color: white;
+	text-align: center;
+	padding-top: 10px;
+	text-shadow: 0px 1px 1px #444;
+	font-size: 0.9em;
+} 
+
+div#header {
+	background-color: #6BA81E;
+	line-height: 32px;
+	color: white;
+	text-shadow: 0px 1px 1px #444;
+	font-size: 1.2em;
+	padding: 10px;
+}
+
+span#header-github {
+	font-size: 0.8em;
+	padding-left: 15px;
+}
+
+span#header-github a {
+	color: #E4E4E4;
+	text-decoration: underline;
+}
+
+span#header-github a:hover {
+	text-decoration: none;
+}
+
+p.warning {
+	margin-top: 10px;
+	color: #811919;
+}
+
+h2, h3 {
+	font-family: Arial, sans-serif;
+	background-color: #C0EBBE;
+	font-weight: normal;
+	color: #343D33;
+	margin: 15px;
+	padding: 5px 0 5px 10px;
+	text-shadow: 0px 1px 1px white;
+}
+
+h3 {
+	margin: 15px 25px 15px 25px;
+	padding: 5px 0 5px 5px;
+	background-color: #C9E3C8;
+}
+
+h3.yellow {
+	background-color: #E3E0C8;
+}
+
+h3.red {
+	background-color: #E3CCC8;
+}
+
+div#notification-response {
+	display: block;
+	margin: 5px 45px 10px 45px;
+	border: 1px solid ccc;
+	padding: 5px;
+	background-color: whiteSmoke;
+	font-family: monospace;
+}
+
+p {
+	text-align: justify;
+}
+
+p {
+	margin: 0 30px;
+}
+
+input {
+	margin-top: 5px;
+}
+
+ul {
+	margin: 10px 15px;
+}
+
+a {
+	color: green;
+}
+
+a:hover {
+	text-decoration: none;
+}
