@@ -1,8 +1,15 @@
 <?php
 ini_set('display_errors','On');
 error_reporting(E_ALL);
+include 'settings.php';
 
-include 'PagSeguroServer.php';
+if ($PAGSEGURO_API_VERSION == 'v1'){
+	include 'PagSeguroServer.php';
+}
+else{
+	include 'PagSeguroServer2.php';
+}
+
 $server = new PagSeguroServer();
 $data = $server->loadState();
 $notification = $server->loadNotification();
@@ -89,7 +96,12 @@ $notification = $server->loadNotification();
 				<p>Para iniciar o ambiente de testes é necessário que você primeiro envie os dados do seu carrinho de compras. Portanto em vez de enviar os dados para o PagSeguro, você enviará para está pagina <a href="http://<?php echo $server->getCurrentHost(); ?>/checkout.php"><?php echo $server->getCurrentHost(); ?>/checkout.php</a>. Mais informações de quais dados são esperados e como funciona o carrinho de compras do PagSeguro você poder ler <a href="https://pagseguro.uol.com.br/desenvolvedor/carrinho_proprio.jhtml#rmcl">aqui</a>. Não se esqueça também de alterar o arquivo PagSeguroServer.php e configurar as variáveis $notification_domain e $notification_page (seu endereço para receber notificações).</p>
 				<br>
 				<p>Exemplo: 
-				<a href="http://<?php echo $server->getCurrentHost(); ?>/checkout.php?cy=BRL&email=turm@test.com&itemId1=1&itemDescription1=Computador%20bacana&itemQuantity1=1&itemAmount1=100.00"><?php echo $server->getCurrentHost(); ?>/checkout.php?tipo=CP&moeda=BRL&ema...&itemAmount1=150.00</a></p><br>
+				<?php if($PAGSEGURO_API_VERSION == "v1") { ?>
+					<a href="http://<?php echo $server->getCurrentHost(); ?>/checkout.php?tipo=CP&moeda=BRL&email_cobranca=turm@test.com&item_id_1=1&item_descr_1=Computador%20bacana&item_quant_1=1&item_valor_1=100.00&item_id_2=2&item_descr_2=Mais%20um%20computador&item_quant_2=2&item_valor_2=150.00"><?php echo $server->getCurrentHost(); ?>/checkout.php?tipo=CP&moeda=BRL&ema...&item_valor_2=150.00</a></p><br>
+				<?php } else { ?>
+					<a href="http://<?php echo $server->getCurrentHost(); ?>/checkout.php?cy=BRL&currency=BRL&email=turm@test.com&itemId1=1&itemDescription1=Computador%20bacana&itemQuantity1=1&itemAmount1=100.00&token=LKJHASJI&redirectURL="><?php echo $server->getCurrentHost(); ?>/checkout.php?tipo=CP&moeda=BRL&ema...&itemAmount1=150.00</a></p><br>
+				<?php } ?>
+
 				<!-- &item_id_2=2&item_descr_2=Mais%20um%20computador&item_quant_2=2&item_valor_2=150.00 -->
 				<p>Tem alguma dúvida, problema ou sugestão? Quer contribuir? Estamos no Github, envie seu feedback para <a href="https://github.com/bcarneiro/pagseguro-ambiente-testes">pagseguro-ambiente-testes</a>!</p>
 				
