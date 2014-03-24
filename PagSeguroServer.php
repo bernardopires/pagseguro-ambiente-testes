@@ -17,13 +17,12 @@ class PagSeguroServer
     const TRANSACTION_CODE_LENGTH = 36;
     private $order;
     private $notification;
-    private $required_data = array("token", "currency", "email", "itemId1", "itemDescription1", "itemQuantity1", "itemAmount1","redirectURL");
-
+    private $required_data = array("tipo", "moeda", "email_cobranca", "item_id_1", "item_descr_1", "item_quant_1", "item_valor_1");
     private $transaction_possible_status = array(
     	"1" => "Aguardando pagamento",
-    	"2" => "Em análise",
+    	"2" => "Em anÃ¡lise",
     	"3" => "Paga",
-    	"4" => "Disponível",
+    	"4" => "DisponÃ­vel",
     	"5" => "Em disputa",
     	"6" => "Devolvida",
     	"7" => "Cancelada",
@@ -70,11 +69,11 @@ class PagSeguroServer
     private function getOrderItems() {
     	$i = 1;
     	$items = array();
-    	while (array_key_exists("itemAmount".$i, $this->order) && array_key_exists("itemQuantity".$i, $this->order)) {
-    		array_push($items, array("id" => $this->order["itemId".$i],
-							   		  "description" => $this->order["itemDescription".$i],
-							   		  "quantity" => $this->order["itemQuantity".$i],
-							   		  "amount" => $this->order["itemAmount".$i]));
+    	while (array_key_exists("item_valor_".$i, $this->order) && array_key_exists("item_quant_".$i, $this->order)) {
+    		array_push($items, array("id" => $this->order["item_id_".$i],
+							   		  "description" => $this->order["item_descr_".$i],
+							   		  "quantity" => $this->order["item_quant_".$i],
+							   		  "amount" => $this->order["item_valor_".$i]));
     		$i += 1;
     	}
     	
@@ -159,11 +158,7 @@ class PagSeguroServer
 
 		$xml->date = date("c");
     	$xml->code = $this->generateRandomString(self::TRANSACTION_CODE_LENGTH);
-    	if (isset($this->order['reference'])) 
-    		$xml->reference = $this->order['reference']; 
-
-    	var_dump($this->order);
-		
+    	if (isset($this->order['ref_transacao'])) $xml->reference = $this->order['ref_transacao']; 
 		$xml->lastEventDate = date("c");
 		$xml->paymentMethod->type = 1;
 		$xml->paymentMethod->code = 101;
@@ -186,22 +181,22 @@ class PagSeguroServer
 		}
 		
 		// sender
-		$xml->sender->name = isset($this->order['senderName']) ?: "Mauro Turm";
-		$xml->sender->email = isset($this->order['senderEmail']) ?: "mauro@mail.com";
-		$xml->sender->phone->areaCode = isset($this->order['senderAreaCode']) ?: "31";
-		$xml->sender->phone->number = isset($this->order['senderPhone']) ?: "55555555";
+		$xml->sender->name = isset($this->order['cliente_nome']) ? $this->order['cliente_nome']: "Mauro Turm";
+		$xml->sender->email = isset($this->order['cliente_email']) ? $this->order['cliente_email']: "mauro@mail.com";
+		$xml->sender->phone->areaCode = $this->order['cliente_ddd'] ?: "31";
+		$xml->sender->phone->number = $this->order['cliente_tel'] ?: "55555555";
 		
-		// // shipping
-		// $xml->shipping->address->street = $this->order['cliente_end'] ?: "Av. do Contorno";
-		// $xml->shipping->address->number = $this->order['cliente_num'] ?: "500";
-		// $xml->shipping->address->complement = $this->order['cliente_compl'] ?: "2o Andar";
-		// $xml->shipping->address->district = $this->order['cliente_bairro'] ?: "Funcionários";
-		// $xml->shipping->address->postalCode = $this->order['cliente_cep'] ?: "30110039";
-		// $xml->shipping->address->city = $this->order['cliente_cidade'] ?: "Belo Horizonte";
-		// $xml->shipping->address->state = $this->order['cliente_uf'] ?: "MG";
-		// $xml->shipping->address->country = $this->order['cliente_pais'] ?: "BRA";
-		// $xml->shipping->type = 3;
-		// $xml->shipping->cost = "0.00";
+		// shipping
+		$xml->shipping->address->street = isset($this->order['cliente_end']) ?$this->order['cliente_end'] : "Av. do Contorno";
+		$xml->shipping->address->number = isset($this->order['cliente_num']) ?$this->order['cliente_num']: "500";
+		$xml->shipping->address->complement = isset($this->order['cliente_compl']) ?$this->order['cliente_compl']: "2o Andar";
+		$xml->shipping->address->district = isset($this->order['cliente_bairro']) ?$this->order['cliente_bairro']: "FuncionÃ¡rios";
+		$xml->shipping->address->postalCode = isset($this->order['cliente_cep']) ?$this->order['cliente_cep']: "30110039";
+		$xml->shipping->address->city = isset($this->order['cliente_cidade']) ?$this->order['cliente_cidade']: "Belo Horizonte";
+		$xml->shipping->address->state = isset($this->order['cliente_uf']) ?$this->order['cliente_uf']: "MG";
+		$xml->shipping->address->country = isset($this->order['cliente_pais']) ?$this->order['cliente_pais']: "BRA";
+		$xml->shipping->type = 3;
+		$xml->shipping->cost = "0.00";
 		
         // write xml file with proper formatting
         $dom = new DOMDocument('1.0');
