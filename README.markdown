@@ -10,30 +10,39 @@ O código está em PHP e este é o único requerimento, fora isso é apenas nece
 Pré-requisitos
 -------------
 
-Instalação do servidor apache;
+* Servidor Apache;
 
-Instalação
+Instalação do Ambiente de testes
 -------------
 Após a instalação do servidor apache, crie uma pasta chamada `pagseguro` dentro do servidor e copie os arquivos do ambiente de testes.  
 Deverá ficar assim:
 
-* pagseguro
- * PagSeguroServer.php
- * checkout.php
- * index.php
- * ...
+    |pagseguro
+    |-- PagSeguroServer.php
+    |-- checkout.php
+    |-- index.php
+    |-- ...
 
 Feito isso, dê permição de escrita e leitura na pasta `pagseguro`;
 
 Configurando o ambiente de testes
 ---------------
 
-É necessário configurar qual o endereço de retorno das notificações. 
+Antes de configurar o ambiente de testes, a primeira tarefa será definir qual versão da API do pagseguro usar e no caso existem duas versões, v1([link v1]("https://pagseguro.uol.com.br/desenvolvedor/carrinho_proprio.jhtml#rmcl" link v1)) e v2([link v2]("https://pagseguro.uol.com.br/v2/guia-de-integracao/api-de-pagamentos.html#!rmcl" link v2)).  
+Por padrão a versão usada é v1, mas caso queira usar a v2, no arquivo `checkout.php`, modifique a linha:
+
+    include 'PagSeguroServer.php';
+para:
+    
+    include 'PagSeguroServer2.php';
+
+Por fim, é necessário configurar qual o endereço de retorno das notificações.  
 Para isso abra o arquivo PagSeguroServer.php e configure as variáveis:
 
     $notification_domain; 
     $notification_page;
     $notification_port (tipicamente 80).
+
 Só isso! Agora basta enviar o seu request para a página `checkout/`.
 
 Como funciona
@@ -43,11 +52,11 @@ Para iniciar o ambiente de testes é necessário que você primeiro envie os dad
 
 ### Fotos do Ambiente de Testes (Sandbox PagSeguro)
 
-Página inicial: http://i.imgur.com/VFZ0E.png
+Página inicial: [http://i.imgur.com/VFZ0E.png](http://i.imgur.com/VFZ0E.png)
 
-Carrinho enviado: http://i.imgur.com/NWFVO.png
+Carrinho enviado: [http://i.imgur.com/NWFVO.png](http://i.imgur.com/NWFVO.png)
 
-Notificação enviada: http://i.imgur.com/8V4yf.png
+Notificação enviada: [http://i.imgur.com/8V4yf.png](http://i.imgur.com/8V4yf.png)
 
 Dúvida, problema ou sugestão? Quer contribuir?
 ------------
