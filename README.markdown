@@ -29,12 +29,12 @@ Configurando o ambiente de testes
 ---------------
 
 Antes de configurar o ambiente de testes, a primeira tarefa será definir qual versão da API do pagseguro usar e no caso existem duas versões, v1([link v1]("https://pagseguro.uol.com.br/desenvolvedor/carrinho_proprio.jhtml#rmcl" link v1)) e v2([link v2]("https://pagseguro.uol.com.br/v2/guia-de-integracao/api-de-pagamentos.html#!rmcl" link v2)).  
-Por padrão a versão usada é v1, mas caso queira usar a v2, no arquivo `checkout.php`, modifique a linha:
+Por padrão a versão configurada é v1, mas caso queira usar a v2, no arquivo `settings.php`, modifique a linha:
 
-    include 'PagSeguroServer.php';
+    $PAGSEGURO_API_VERSION = "v1"
 para:
     
-    include 'PagSeguroServer2.php';
+    $PAGSEGURO_API_VERSION = "v2"
 
 Por fim, é necessário configurar qual o endereço de retorno das notificações.  
 Para isso abra o arquivo PagSeguroServer.php e configure as variáveis:
